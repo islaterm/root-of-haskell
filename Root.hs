@@ -6,7 +6,7 @@
 -- You should have received a copy of the license along with this
 -- work. If not, see <http://creativecommons.org/licenses/by/4.0/>.
 
--- v1.0.0-b.1
+-- v1.0.0-b.2
 module Root where
 
 type Seed = Double
@@ -16,4 +16,4 @@ type Approximations = [Double]
 Creates succesive approximations of r given a seed a0.
 -}
 apps :: Seed -> Double -> Approximations
-apps a0 r = undefined
+apps a0 r = a0 : apps an r where an = 0.5 * (a0 + r / a0)
