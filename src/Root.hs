@@ -6,7 +6,7 @@
 -- You should have received a copy of the license along with this
 -- work. If not, see <http://creativecommons.org/licenses/by/4.0/>.
 
--- v1.0.0-b.4
+-- v1.0
 
 module Root where
 
@@ -14,6 +14,7 @@ import           Test.QuickCheck
 import           Test.Hspec
 
 type Seed = Double
+type Precision = Double
 type Approximations = [Double]
 
 -- region : apps
@@ -83,8 +84,25 @@ testAppsLimit =
                 )
           <=  e
 -- endregion
+-- region : approxSqrt
+approxSqrt :: Double -> Seed -> Precision -> Double
+approxSqrt v s p = approxLimit p xs where xs = apps s v
+
+testApproxSqrt :: Spec
+testApproxSqrt =
+  describe "Square root approximation:" $ it "" $ property $ \v s p ->
+    (v :: Double)
+      >   0
+      &&  (s :: Seed)
+      >   0
+      &&  (p :: Precision)
+      >   0
+      ==> abs (approxSqrt v s (p / 1000000) - sqrt v)
+      <=  p / 1000000
+-- endregion
 
 main :: IO ()
 main = hspec $ do
   testApps
   testAppsLimit
+  testApproxSqrt
